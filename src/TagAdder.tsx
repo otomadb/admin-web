@@ -25,7 +25,83 @@ export const Find: React.FC<{ name: string }> = ({ name }) => {
   );
 };
 
-export const Type: React.FC<{
+export const PrimaryName: React.FC<{ className?: string; handleChange(v: string): void }> = (
+  { className, handleChange },
+) => {
+  const [primaryName, setPrimaryName] = useState<string>("");
+
+  useEffect(() => {
+    handleChange(primaryName);
+  }, [primaryName]);
+
+  return (
+    <div className={clsx(className)}>
+      <label className={clsx(["flex", "items-center"])}>
+        <span className={clsx(["block"])}>Primary Name</span>
+        <input
+          className={clsx(["ml-2"], ["flex-grow"])}
+          value={primaryName}
+          onChange={(e) => {
+            setPrimaryName(e.target.value);
+          }}
+        >
+        </input>
+      </label>
+      {primaryName !== "" && <Find name={primaryName} />}
+    </div>
+  );
+};
+
+export const ExtraName: React.FC<{ className?: string; handleChange(v: string[]): void }> = (
+  { className, handleChange },
+) => {
+  const [extranames, setExtranames] = useState<string[]>([]);
+  useEffect(() => {
+    handleChange(extranames);
+  }, [extranames]);
+
+  return (
+    <>
+      <div className={clsx(className, ["flex", "flex-col"])}>
+        {extranames.map((extraname, i) => (
+          <div key={i}>
+            <div className={clsx(["flex"], ["items-center"])}>
+              <label className={clsx(["flex-grow"], ["flex", "items-center"])}>
+                <span className={clsx(["block"])}>Extra Name {i + 1}</span>
+                <input
+                  className={clsx(["ml-2"], ["flex-grow"])}
+                  value={extraname}
+                  onChange={(e) => {
+                    setExtranames((prev) => [...prev.slice(0, i), e.target.value, ...prev.slice(i + 1)]);
+                  }}
+                >
+                </input>
+              </label>
+              <button
+                className={clsx(["ml-2"], ["px-2"])}
+                onClick={() => {
+                  setExtranames((prev) => [...prev.slice(0, i), ...prev.slice(i + 1)]);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+            {extraname && <Find name={extraname} />}
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={() => {
+          setExtranames((prev) => [...prev, ""]);
+        }}
+      >
+        +
+      </button>
+    </>
+  );
+};
+
+export const TypeSelector: React.FC<{
   className?: string;
   handleChangeType(v: string): void;
 }> = (
@@ -49,51 +125,6 @@ export const Type: React.FC<{
         </label>
       ))}
     </div>
-  );
-};
-
-export const ExtraName: React.FC<{ handleChange(v: string[]): void }> = ({ handleChange }) => {
-  const [extranames, setExtranames] = useState<string[]>([]);
-  useEffect(() => {
-    handleChange(extranames);
-  }, [extranames]);
-
-  return (
-    <>
-      <div className={clsx(["flex", "flex-col"])}>
-        {extranames.map((extraname, i) => (
-          <div key={i}>
-            <div>
-              <label>
-                <span>Extraname {i + 1}</span>
-                <input
-                  value={extraname}
-                  onChange={(e) => {
-                    setExtranames((prev) => [...prev.slice(0, i), e.target.value, ...prev.slice(i + 1)]);
-                  }}
-                >
-                </input>
-              </label>
-              <button
-                onClick={() => {
-                  setExtranames((prev) => [...prev.slice(0, i), ...prev.slice(i + 1)]);
-                }}
-              >
-                -
-              </button>
-            </div>
-            {extraname && <Find name={extraname} />}
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={() => {
-          setExtranames((prev) => [...prev, ""]);
-        }}
-      >
-        +
-      </button>
-    </>
   );
 };
 
@@ -123,22 +154,15 @@ export const TagAdder: React.FC = () => {
 
   return (
     <div>
-      <div>
-        <label>
-          <span>Primary Name</span>
-          <input
-            value={primaryName}
-            onChange={(e) => {
-              setPrimaryName(e.target.value);
-            }}
-          >
-          </input>
-        </label>
-        {primaryName !== "" && <Find name={primaryName} />}
-      </div>
-      <ExtraName handleChange={(v) => setExtranames(v)}></ExtraName>
-      <Type handleChangeType={(v) => setType(v)}></Type>
-      <button onClick={() => add()}>ADD</button>
+      <PrimaryName className={clsx(["mt-2"])} handleChange={(v) => setPrimaryName(v)} />
+      <ExtraName className={clsx(["mt-2"])} handleChange={(v) => setExtranames(v)}></ExtraName>
+      <TypeSelector className={clsx(["mt-4"])} handleChangeType={(v) => setType(v)}></TypeSelector>
+      {type === "CHARACTER" && (
+        <div className={clsx(["mt-2"])}>
+          <span>character must have context.</span>
+        </div>
+      )}
+      <button className={clsx(["mt-4"])} onClick={() => add()}>ADD</button>
     </div>
   );
 };
