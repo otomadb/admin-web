@@ -2,6 +2,7 @@ import clsx from "clsx";
 import ky from "ky";
 import React, { useState } from "react";
 import useSWR from "swr";
+import { TagAdder } from "./TagAdder";
 
 export const buildCheckNiconicoUrl = (id: string) => {
   const url = new URL(`/niconico/check/${id}`, import.meta.env.VITE_API_ENDPOINT!);
@@ -31,9 +32,10 @@ export const TagSearch: React.FC<{ tag: string }> = ({ tag: tag }) => {
           }[];
         }
       >(),
+    { refreshInterval: 1000 },
   );
 
-  if (isValidating) return <span>LOADING</span>;
+  if (!data && isValidating) return <span>LOADING</span>;
   if (!data) return null;
 
   return (
@@ -88,7 +90,7 @@ export const Niconico: React.FC<{ id: string }> = ({ id }) => {
 };
 
 export const IndexPage: React.FC = () => {
-  const [input, setInput] = useState("sm39829973");
+  const [input, setInput] = useState("sm41362340");
   const [id, setId] = useState<string | null>(null);
 
   return (
