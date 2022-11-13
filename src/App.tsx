@@ -92,7 +92,7 @@ export const IndexPage: React.FC = () => {
   const [id, setId] = useState<string | null>(null);
 
   return (
-    <main>
+    <main className={clsx(["grid"], ["grid-cols-2"])}>
       <div>
         <p>niconico checker</p>
         <input
@@ -106,12 +106,15 @@ export const IndexPage: React.FC = () => {
           onClick={() => {
             if (!input.startsWith("sm") && !input.startsWith("nv")) return;
             setId(input);
-            console.log(id);
           }}
         >
           Check
         </button>
         {id && <Niconico id={id}></Niconico>}
+      </div>
+      <div>
+        <p>Tag Adder</p>
+        <TagAdder></TagAdder>
       </div>
     </main>
   );
