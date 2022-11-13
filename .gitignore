@@ -1,0 +1,24 @@
+.env
+.direnv
+
+result
+target
+
+# misc
+.DS_Store
+*.pem
+
+# env
+.env*.local
+
+# dependency
+node_modules/
+
+# cache
+.eslintcache
+
+# log
+.pnpm-debug.log
+
+# typescript
+*.tsbuildinfo
