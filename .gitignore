@@ -22,3 +22,6 @@ node_modules/
 
 # typescript
 *.tsbuildinfo
+
+# build
+dist
